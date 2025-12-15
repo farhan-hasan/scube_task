@@ -9,7 +9,7 @@ class AppTheme {
       fontFamily: 'Inter',
       primarySwatch: Colors.blue,
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.scaffoldBackground,
+      scaffoldBackgroundColor: AppColors.secondary,
       canvasColor: AppColors.secondary,
       iconTheme: const IconThemeData(color: AppColors.primary, size: 24),
       colorScheme: ColorScheme.fromSeed(
@@ -56,13 +56,13 @@ class AppTheme {
 
   static TextTheme _buildTextTheme() {
     return TextTheme(
-      // bodyLarge: _buildTextStyle( // Used in Design
-      //   color: AppColors.grey,
-      //   fontSize: 16,
-      //   fontWeight: FontWeight.w400,
-      //   letterSpacing: 0,
-      //   fontFamily: 'Poppins',
-      // ),
+      bodyLarge: _buildTextStyle( // Used in Design
+        color: AppColors.grey,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0,
+        fontFamily: 'Inter',
+      ),
       bodyMedium: _buildTextStyle( // Used in Design
         color: AppColors.grey,
         fontSize: 14,
@@ -70,13 +70,13 @@ class AppTheme {
         letterSpacing: 0,
         fontFamily: 'Inter',
       ),
-      // bodySmall: _buildTextStyle( // Used in Design
-      //   color: AppColors.grey,
-      //   fontSize: 12,
-      //   fontWeight: FontWeight.w400,
-      //   letterSpacing: 0,
-      //   fontFamily: 'Poppins',
-      // ),
+      bodySmall: _buildTextStyle( // Used in Design
+        color: AppColors.grey,
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0,
+        fontFamily: 'Inter',
+      ),
       displayLarge: _buildTextStyle(
         color: AppColors.white,
         fontSize: 24,
@@ -84,13 +84,13 @@ class AppTheme {
         letterSpacing: 0,
         fontFamily: 'Inter',
       ),
-      // displayMedium: _buildTextStyle(
-      //   color: AppColors.black,
-      //   fontSize: 32,
-      //   fontWeight: FontWeight.w700,
-      //   letterSpacing: 0,
-      //   fontFamily: 'Poppins',
-      // ),
+      displayMedium: _buildTextStyle(
+        color: AppColors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0,
+        fontFamily: 'Inter',
+      ),
       displaySmall: _buildTextStyle(
         color: AppColors.black,
         fontSize: 18,
@@ -112,13 +112,13 @@ class AppTheme {
       //   letterSpacing: 0,
       //   fontFamily: 'Poppins',
       // ),
-      // headlineSmall: _buildTextStyle( // Used in Design
-      //   color: AppColors.black,
-      //   fontSize: 16,
-      //   fontWeight: FontWeight.w600,
-      //   letterSpacing: 0,
-      //   fontFamily: 'Poppins',
-      // ),
+      headlineSmall: _buildTextStyle( // Used in Design
+        color: AppColors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0,
+        fontFamily: 'Inter',
+      ),
       // labelLarge: _buildTextStyle( // Used in Design
       //   color: AppColors.black,
       //   fontSize: 26,
@@ -126,13 +126,13 @@ class AppTheme {
       //   letterSpacing: 0,
       //   fontFamily: 'Poppins',
       // ),
-      // labelMedium: _buildTextStyle( // Used in Design
-      //   color: AppColors.black,
-      //   fontSize: 20,
-      //   fontWeight: FontWeight.w600,
-      //   letterSpacing: 0,
-      //   fontFamily: 'Poppins',
-      // ),
+      labelMedium: _buildTextStyle( // Used in Design
+        color: AppColors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0,
+        fontFamily: 'Inter',
+      ),
       labelSmall: _buildTextStyle( // Used in Design
         color: AppColors.black,
         fontSize: 12,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scube_task/src/core/assets/app_assets.dart';
 import 'package:scube_task/src/core/theme/app_colors.dart';
+import 'package:scube_task/src/features/scm/presentation/screens/scm_analytics_screen.dart';
 import 'package:scube_task/src/features/shared/widgets/custom_elevated_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //Header
+            ///Header
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 80),
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            //Form
+            ///Form
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -132,6 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
                       CustomElevatedButton(title: "Login", onTap: (){
                         FocusScope.of(context).unfocus();
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ScmAnalyticsScreen()));
                       },),
                       const SizedBox(height: 8),
                       RichText(
