@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scube_task/src/core/assets/app_assets.dart';
+import 'package:scube_task/src/core/constants/app_constants.dart';
 import 'package:scube_task/src/core/theme/app_colors.dart';
 import 'package:scube_task/src/features/scm/data/dummy_analytics_data.dart';
-import 'package:scube_task/src/features/scm/presentation/screens/no_data_screen.dart';
 import 'package:scube_task/src/features/scm/presentation/widgets/circular_progress_painter.dart';
+import 'package:scube_task/src/features/scm/presentation/widgets/data_cost_list_item.dart';
 import 'package:scube_task/src/features/shared/widgets/custom_appbar.dart';
 
 class ScmAnalyticsDetailsScreen extends StatefulWidget {
@@ -20,6 +20,7 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
     with TickerProviderStateMixin {
   late TabController viewTabController;
   late TabController dataTabController;
+  final ValueNotifier<bool> isRevenueDataExpanded = ValueNotifier(true);
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
   void dispose() {
     viewTabController.dispose();
     dataTabController.dispose();
+    isRevenueDataExpanded.dispose();
     super.dispose();
   }
 
@@ -81,7 +83,7 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
                   child: TabBarView(
                     controller: viewTabController,
                     physics: NeverScrollableScrollPhysics(),
-                    children: [buildTabContent(), buildTabContent()],
+                    children: [buildDataViewContent(), buildRevenueViewContent()],
                   ),
                 ),
               ),
@@ -171,7 +173,7 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
     );
   }
 
-  Widget buildTabContent() {
+  Widget buildDataViewContent() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
@@ -219,75 +221,73 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
             ),
           ),
           SizedBox(height: 20,),
-          SizedBox(
-            height: 18,
-            child: TabBar(
-              controller: dataTabController,
-              indicator: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              labelColor: AppColors.primary,
-              unselectedLabelColor: AppColors.unselectedTabTextColor,
-              labelStyle: Theme
-                  .of(context)
-                  .textTheme
-                  .displayMedium
-                  ?.copyWith(
-                color: AppColors.primary,
-              ),
-              unselectedLabelStyle: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: AppColors.unselectedTabTextColor),
-              dividerColor: Colors.transparent,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        height: 10,
-                        width: 10,
-                        AppAssets.bulletPointIcon,
-                        colorFilter: ColorFilter.mode(
-                          dataTabController.index == 0
-                              ? AppColors.primary
-                              : AppColors.unselectedTabTextColor,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text("Today Data"),
-                    ],
-                  ),
-                ),
-                Tab(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        height: 10,
-                        width: 10,
-                        AppAssets.bulletPointIcon,
-                        colorFilter: ColorFilter.mode(
-                          dataTabController.index == 1
-                              ? AppColors.primary
-                              : AppColors.unselectedTabTextColor,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text("Custom Date Data"),
-                    ],
-                  ),
-                ),
-              ],
+          TabBar(
+            controller: dataTabController,
+            indicator: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
             ),
+            labelColor: AppColors.primary,
+            unselectedLabelColor: AppColors.unselectedTabTextColor,
+            labelStyle: Theme
+                .of(context)
+                .textTheme
+                .displayMedium
+                ?.copyWith(
+              color: AppColors.primary,
+            ),
+            unselectedLabelStyle: Theme
+                .of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: AppColors.unselectedTabTextColor),
+            dividerColor: Colors.transparent,
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabs: [
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      height: 10,
+                      width: 10,
+                      AppAssets.bulletPointIcon,
+                      colorFilter: ColorFilter.mode(
+                        dataTabController.index == 0
+                            ? AppColors.primary
+                            : AppColors.unselectedTabTextColor,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text("Today Data"),
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      height: 10,
+                      width: 10,
+                      AppAssets.bulletPointIcon,
+                      colorFilter: ColorFilter.mode(
+                        dataTabController.index == 1
+                            ? AppColors.primary
+                            : AppColors.unselectedTabTextColor,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text("Custom Date Data"),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
           Expanded(
             child: TabBarView(
               controller: dataTabController,
@@ -303,130 +303,51 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
   Widget buildTodayData() {
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(AppSpacing.sm),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
           border: Border.all(
             color: AppColors.boxBorderColor,
-            width: 1,
+            width: AppSizes.borderWidth,
           ),
         ),
         child: Column(
           children: [
-            const SizedBox(height: 12,),
+            const SizedBox(height: AppSpacing.md),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("Energy Chart", style: Theme
-                    .of(context)
-                    .textTheme
-                    .displayMedium,),
-                Text("5.53 kw", style: Theme
-                    .of(context)
-                    .textTheme
-                    .displayMedium
-                    ?.copyWith(fontSize: 32),),
+                Text(
+                  "Energy Chart",
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+                Text(
+                  "5.53 kw",
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayMedium
+                      ?.copyWith(fontSize: 32),
+                ),
               ],
             ),
-            const SizedBox(height: 20,),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: DummyAnalyticsData.dataCostList.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 4),
-              itemBuilder: (context, index) {
-                final dataCost = DummyAnalyticsData.dataCostList[index];
-                return Container(
-                  height: 42,
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.secondary,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: AppColors.boxBorderColor,
-                      width: 1,
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // title
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.circle, color: dataCost.color, size: 8,),
-                          const SizedBox(height: 2,),
-                          Text(dataCost.title, style: Theme
-                              .of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(fontSize: 12),)
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      VerticalDivider(
-                        color: AppColors.boxBorderColor,
-                        thickness: 1,
-                        width: 1,
-                      ),
-                      // data
-                      const SizedBox(width: 8),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              text: 'Data    : ',
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodySmall,
-                              children: [
-                                TextSpan(
-                                  text: dataCost.data,
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .displaySmall
-                                      ?.copyWith(
-                                      color: AppColors.backButtonColor,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text.rich(
-                            TextSpan(
-                              text: 'Cost    : ',
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodySmall,
-                              children: [
-                                TextSpan(
-                                  text: dataCost.cost,
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .displaySmall
-                                      ?.copyWith(
-                                      color: AppColors.backButtonColor,
-                                      fontSize: 12
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            )
+            const SizedBox(height: AppSpacing.xl),
+            MediaQuery.removePadding(
+              context: context,
+              removeBottom: true,
+              removeTop: true,
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: DummyAnalyticsData.dataCostList.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: AppSpacing.xs),
+                itemBuilder: (context, index) {
+                  return DataCostListItem(
+                    dataCost: DummyAnalyticsData.dataCostList[index],
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -547,107 +468,254 @@ class _ScmAnalyticsDetailsScreenState extends State<ScmAnalyticsDetailsScreen>
 
   Widget buildDataContainer(String title, String value) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         border: Border.all(
           color: AppColors.boxBorderColor,
-          width: 1,
+          width: AppSizes.borderWidth,
         ),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(title, style: Theme.of(context).textTheme.displayMedium),
-              Text(value, style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 32)),
+              Text(
+                value,
+                style: Theme.of(context)
+                    .textTheme
+                    .displayMedium
+                    ?.copyWith(fontSize: 32),
+              ),
             ],
           ),
-          const SizedBox(height: 20),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: DummyAnalyticsData.dataCostList.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 4),
-            itemBuilder: (context, index) {
-              final dataCost = DummyAnalyticsData.dataCostList[index];
-              return Container(
-                height: 42,
-                padding: const EdgeInsets.all(4),
+          const SizedBox(height: AppSpacing.xl),
+          MediaQuery.removePadding(
+            context: context,
+            removeBottom: true,
+            removeTop: true,
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: DummyAnalyticsData.dataCostList.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: AppSpacing.xs),
+              itemBuilder: (context, index) {
+                return DataCostListItem(
+                  dataCost: DummyAnalyticsData.dataCostList[index],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRevenueViewContent() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 50),
+          // Circular Progress Bar
+          SizedBox(
+            width: 160,
+            height: 130,
+            child: CustomPaint(
+              painter: CircularProgressPainter(
+                progress: 0.60,
+                strokeWidth: 20,
+                backgroundColor: AppColors.boxBorderColor,
+                progressColor: AppColors.totalPowerSliderColor,
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "8897455",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .labelLarge
+                          ?.copyWith(
+                        color: AppColors.backButtonColor,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Tk",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .labelMedium
+                          ?.copyWith(
+                        color: AppColors.backButtonColor,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 40,),
+          buildRevenueData(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRevenueData() {
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: 250,
+        child: Stack(
+          children: [
+            // Data container
+            Positioned(
+              top: 20,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: isRevenueDataExpanded,
+                builder: (context, isExpanded, child) {
+                  return AnimatedOpacity(
+                    opacity: isExpanded ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: IgnorePointer(
+                      ignoring: !isExpanded,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: AppColors.boxBorderColor,
+                            width: 1,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 40, left: 12, right: 12, bottom: 4),
+                          child: MediaQuery.removePadding(
+                            context: context,
+                            removeBottom: true,
+                            removeTop: true,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: DummyAnalyticsData.dataCostList.length,
+                              separatorBuilder: (context, index) => const SizedBox(height: 12),
+                              itemBuilder: (context, index) {
+                                final dataCost = DummyAnalyticsData.dataCostList[index];
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondary,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text.rich(
+                                            TextSpan(
+                                              text: 'Data    : ',
+                                              style: Theme.of(context).textTheme.bodySmall,
+                                              children: [
+                                                TextSpan(
+                                                  text: dataCost.data,
+                                                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                                    color: AppColors.backButtonColor,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text.rich(
+                                            TextSpan(
+                                              text: 'Cost    : ',
+                                              style: Theme.of(context).textTheme.bodySmall,
+                                              children: [
+                                                TextSpan(
+                                                  text: dataCost.cost,
+                                                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                                    color: AppColors.backButtonColor,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            // Header on top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColors.secondary,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: AppColors.boxBorderColor,
                     width: 1,
                   ),
                 ),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.circle, color: dataCost.color, size: 8),
-                        const SizedBox(height: 2),
-                        Text(
-                          dataCost.title,
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 12),
-                        ),
-                      ],
-                    ),
+                    SvgPicture.asset(AppAssets.barChartIcon),
                     const SizedBox(width: 8),
-                    VerticalDivider(
-                      color: AppColors.boxBorderColor,
-                      thickness: 1,
-                      width: 1,
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text.rich(
-                          TextSpan(
-                            text: 'Data    : ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                            children: [
-                              TextSpan(
-                                text: dataCost.data,
-                                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppColors.backButtonColor,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text.rich(
-                          TextSpan(
-                            text: 'Cost    : ',
-                            style: Theme.of(context).textTheme.bodySmall,
-                            children: [
-                              TextSpan(
-                                text: dataCost.cost,
-                                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: AppColors.backButtonColor,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    Text("Data & Cost Info", style: Theme
+                        .of(context)
+                        .textTheme
+                        .displaySmall
+                        ?.copyWith(fontSize: 12),),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        isRevenueDataExpanded.value = !isRevenueDataExpanded.value;
+                      },
+                      child: ValueListenableBuilder<bool>(
+                        valueListenable: isRevenueDataExpanded,
+                        builder: (context, isExpanded, child) {
+                          return AnimatedRotation(
+                            turns: isExpanded ? 0 : 0.5,
+                            duration: const Duration(milliseconds: 300),
+                            child: SvgPicture.asset(AppAssets.expandIcon),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scube_task/src/core/constants/app_constants.dart';
 import 'package:scube_task/src/core/theme/app_colors.dart';
 import 'package:scube_task/src/features/scm/data/dummy_analytics_data.dart';
 import 'package:scube_task/src/features/scm/presentation/screens/no_data_screen.dart';
 import 'package:scube_task/src/features/scm/presentation/screens/scm_analytics_details_screen.dart';
+import 'package:scube_task/src/features/scm/presentation/widgets/source_load_list_item.dart';
 import 'package:scube_task/src/features/shared/widgets/custom_appbar.dart';
 
 class ScmAnalyticsScreen extends StatefulWidget {
@@ -29,13 +30,23 @@ class _ScmAnalyticsScreenState extends State<ScmAnalyticsScreen>
       vsync: this,
       //animationDuration: Duration.zero,
     );
+    analyticTabController.addListener(resetScrollPosition);
     sourceLoadTabController = TabController(
       length: 2,
       vsync: this,
       //animationDuration: Duration.zero,
     );
+    sourceLoadTabController.addListener(resetScrollPosition);
     scrollController = ScrollController();
     scrollController.addListener(onScroll);
+  }
+
+  void resetScrollPosition() {
+    if (scrollController.hasClients) {
+      scrollController.jumpTo(0);
+      scrollThumbOffset.value = 0.0;
+      isScrolledToBottom.value = false;
+    }
   }
 
   void onScroll() {
@@ -305,129 +316,27 @@ class _ScmAnalyticsScreenState extends State<ScmAnalyticsScreen>
   }
 
   Widget buildSourceLoadList() {
-    const double thumbHeight = 33.0;
-    const double thumbWidth = 4.0;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final listHeight = constraints.maxHeight;
-        final availableThumbTravel = listHeight - thumbHeight;
+        final availableThumbTravel = listHeight - AppSizes.scrollThumbHeight;
 
         return Stack(
           children: [
             // Data list
             ListView.separated(
               controller: scrollController,
-              padding: const EdgeInsets.only(right: 12),
+              padding: const EdgeInsets.only(right: AppSpacing.md),
               itemCount: DummyAnalyticsData.sourceLoadData.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 8),
+              separatorBuilder: (context, index) =>
+                const SizedBox(height: AppSpacing.sm),
               itemBuilder: (context, index) {
                 final sourceLoadData = DummyAnalyticsData.sourceLoadData[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ScmAnalyticsDetailsScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 70,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.tabBarBackgroundColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: AppColors.boxBorderColor,
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        // icon
-                        SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: Image.asset(sourceLoadData.getIconPath),
-                        ),
-                        // data
-                        const SizedBox(width: 12),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 12,
-                                  width: 12,
-                                  color: sourceLoadData.getColor,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  sourceLoadData.getTitle,
-                                  style: Theme.of(context).textTheme.labelSmall
-                                      ?.copyWith(
-                                        fontSize: 14,
-                                        color: AppColors.backButtonColor,
-                                      ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  "(${sourceLoadData.isActive ? "Active" : "Inactive"})",
-                                  style: Theme.of(context).textTheme.labelSmall
-                                      ?.copyWith(
-                                        fontSize: 10,
-                                        color: sourceLoadData.isActive
-                                            ? AppColors.primary
-                                            : AppColors
-                                                  .notificationIndicatorColor,
-                                      ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text.rich(
-                              TextSpan(
-                                text: 'Data 1    : ',
-                                style: Theme.of(context).textTheme.bodySmall,
-                                children: [
-                                  TextSpan(
-                                    text: sourceLoadData.getDataOne.toString(),
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: AppColors.backButtonColor,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text.rich(
-                              TextSpan(
-                                text: 'Data 2    : ',
-                                style: Theme.of(context).textTheme.bodySmall,
-                                children: [
-                                  TextSpan(
-                                    text: sourceLoadData.getDataTwo.toString(),
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: AppColors.backButtonColor,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        // arrow
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppColors.grey,
-                          size: 16,
-                        ),
-                      ],
+                return SourceLoadListItem(
+                  data: sourceLoadData,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ScmAnalyticsDetailsScreen(),
                     ),
                   ),
                 );
@@ -439,10 +348,10 @@ class _ScmAnalyticsScreenState extends State<ScmAnalyticsScreen>
               top: 0,
               bottom: 0,
               child: Container(
-                width: thumbWidth,
+                width: AppSizes.scrollThumbWidth,
                 decoration: BoxDecoration(
                   color: AppColors.boxBorderColor,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 ),
               ),
             ),
@@ -456,8 +365,8 @@ class _ScmAnalyticsScreenState extends State<ScmAnalyticsScreen>
                   right: 0,
                   top: thumbPosition,
                   child: Container(
-                    width: thumbWidth,
-                    height: thumbHeight,
+                    width: AppSizes.scrollThumbWidth,
+                    height: AppSizes.scrollThumbHeight,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -467,7 +376,7 @@ class _ScmAnalyticsScreenState extends State<ScmAnalyticsScreen>
                           AppColors.scrollThumbGradientColorTwo,
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                     ),
                   ),
                 );
@@ -477,20 +386,20 @@ class _ScmAnalyticsScreenState extends State<ScmAnalyticsScreen>
             Positioned(
               bottom: 0,
               left: 0,
-              right: 12,
+              right: AppSpacing.md,
               child: IgnorePointer(
                 child: ValueListenableBuilder<bool>(
                   valueListenable: isScrolledToBottom,
                   builder: (context, isScrolledToBottom, child) {
                     return AnimatedOpacity(
                       opacity: isScrolledToBottom ? 0.0 : 1.0,
-                      duration: const Duration(milliseconds: 200),
+                      duration: AppDurations.fast,
                       child: Container(
-                        height: 40,
+                        height: AppSpacing.huge,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(4),
-                            bottomRight: Radius.circular(4),
+                            bottomLeft: Radius.circular(AppSizes.radiusSm),
+                            bottomRight: Radius.circular(AppSizes.radiusSm),
                           ),
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,

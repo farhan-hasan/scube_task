@@ -20,6 +20,8 @@ class AppAssets {
   static const String bulletPointIcon = "assets/icons/scm_analytics_details_screen_icons/bullet_point_icon.svg";
   static const String calendarIcon = "assets/icons/scm_analytics_details_screen_icons/calendar_icon.svg";
   static const String searchIcon = "assets/icons/scm_analytics_details_screen_icons/search_icon.svg";
+  static const String barChartIcon = "assets/icons/scm_analytics_details_screen_icons/bar_chart_icon.svg";
+  static const String expandIcon = "assets/icons/scm_analytics_details_screen_icons/expand_icon.svg";
 
 
 
