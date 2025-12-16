@@ -16,6 +16,12 @@ class AppAssets {
   static const String solarCellIcon = "assets/icons/scm_analytics_screen_icons/solar_cell_icon.png";
   static const String fireIcon = "assets/icons/scm_analytics_screen_icons/fire_icon.png";
 
+  /// SCM Analytics Details Screen Icons
+  static const String bulletPointIcon = "assets/icons/scm_analytics_details_screen_icons/bullet_point_icon.svg";
+  static const String calendarIcon = "assets/icons/scm_analytics_details_screen_icons/calendar_icon.svg";
+  static const String searchIcon = "assets/icons/scm_analytics_details_screen_icons/search_icon.svg";
+
+
 
 
 }

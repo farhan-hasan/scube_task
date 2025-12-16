@@ -16,13 +16,17 @@ class AppColors {
   static const Color tabBarBackgroundColor = Color(0xFF6C99B8);
   static const Color blueDataColor = Color(0xFF78C6FF);
   static const Color orangeDataColor = Color(0xFFFB902E);
+  static const Color purpleDataColor = Color(0xFF9747FF);
   static const Color dataCardBackGroundColor = Color(0xFFA5A7B9);
+  static const Color scrollThumbGradientColorOne = Color(0xFF4E91FD);
+  static const Color scrollThumbGradientColorTwo = Color(0xFF080B7F);
 
 
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
   static const Color grey = Color(0xFF5E5E5E);
   static const Color lightGrey = Color(0xFF979797);
+  static const Color extraLightGrey = Color(0xFFE2EBF1);
 
 
 }

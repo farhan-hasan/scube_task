@@ -119,13 +119,13 @@ class AppTheme {
         letterSpacing: 0,
         fontFamily: 'Inter',
       ),
-      // labelLarge: _buildTextStyle( // Used in Design
-      //   color: AppColors.black,
-      //   fontSize: 26,
-      //   fontWeight: FontWeight.w600,
-      //   letterSpacing: 0,
-      //   fontFamily: 'Poppins',
-      // ),
+      labelLarge: _buildTextStyle( // Used in Design
+        color: AppColors.black,
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0,
+        fontFamily: 'Inter',
+      ),
       labelMedium: _buildTextStyle( // Used in Design
         color: AppColors.black,
         fontSize: 16,
